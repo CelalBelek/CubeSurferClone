@@ -7,11 +7,15 @@ public class PlayerTrigger : MonoBehaviour
 {
     CameraController cameraController;
     PlayerController playerController;
+    EmeraldManager emeraldManager;
 
     private void Start()
     {
         cameraController = FindObjectOfType<CameraController>();
         playerController = FindObjectOfType<PlayerController>();
+        emeraldManager = FindObjectOfType<EmeraldManager>();
+
+        CameraFixed();
     }
 
     public List<GameObject> CubesList = new List<GameObject>();
@@ -72,6 +76,12 @@ public class PlayerTrigger : MonoBehaviour
             playerController.speedZ += 2;
 
             StartCoroutine(FastNormalize());
+        }
+        else if (other.tag == "Emerald")
+        {
+            emeraldManager.AddEmearlds(other.transform.position, 1);
+            emeraldManager.emeraldCount++;
+            Destroy(other.gameObject);
         }
     }
 
