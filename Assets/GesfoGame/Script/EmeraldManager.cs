@@ -44,7 +44,6 @@ public class EmeraldManager : MonoBehaviour
 
     void Animate(Vector3 collectedEmeraldPosition, int amount)
     {
-        Debug.Log("Girdi");
         for (int i = 0; i < amount; i++)
         {
             if (emeraldQueue.Count > 0)

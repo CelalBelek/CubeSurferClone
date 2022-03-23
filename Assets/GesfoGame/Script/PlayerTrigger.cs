@@ -9,15 +9,6 @@ public class PlayerTrigger : MonoBehaviour
     PlayerController playerController;
     EmeraldManager emeraldManager;
 
-    private void Start()
-    {
-        cameraController = FindObjectOfType<CameraController>();
-        playerController = FindObjectOfType<PlayerController>();
-        emeraldManager = FindObjectOfType<EmeraldManager>();
-
-        CameraFixed();
-    }
-
     public List<GameObject> CubesList = new List<GameObject>();
 
     public GameObject Player;
@@ -26,6 +17,14 @@ public class PlayerTrigger : MonoBehaviour
 
     public Animator AstronotAnimator;
 
+    private void Start()
+    {
+        cameraController = FindObjectOfType<CameraController>();
+        playerController = FindObjectOfType<PlayerController>();
+        emeraldManager = FindObjectOfType<EmeraldManager>();
+
+        CameraFixed();
+    }
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Cube")
@@ -60,11 +59,11 @@ public class PlayerTrigger : MonoBehaviour
         else if (other.tag == "GroundTurn")
         {
             Player.transform.DORotate(new Vector3(0, 90, 0), 0.5f, RotateMode.Fast);
-            Camera.main.GetComponent<CameraController>().SlideCamera(true);
 
-            FindObjectOfType<PlayerController>().lastPositionZ = other.GetComponent<LastPositionController>().NextGround.transform.position.z;
+            FindObjectOfType<PlayerController>().lastPositionZ = other.GetComponent<LastPositionController>().NextGround.transform.position.z + 1;
             FindObjectOfType<PlayerController>().lastPositionX = other.GetComponent<LastPositionController>().NextGround.transform.position.x;
-            
+
+            Camera.main.GetComponent<CameraController>().SlideCamera(true);
         }
         else if (other.tag == "Platform")
         {
@@ -104,31 +103,35 @@ public class PlayerTrigger : MonoBehaviour
     {
         if (CubesList.Count < 5)
         {
-            cameraController.newTrailDistance = 18.0f;
-            cameraController.newHeightOffset = 8.5f;
+            cameraController.newTrailDistance = 12.0f;
+            cameraController.newHeightOffset = 6.0f;
             cameraController.newCameraDelay = 1.0f;
-            cameraController.newHorizontalOffset = 6.0f;
+            cameraController.newHorizontalOffset = 4.0f;
+            playerController.newlastPositionY = 0.0f;
         }
         else if (CubesList.Count < 10)
         {
-            cameraController.newTrailDistance = 20.0f;
-            cameraController.newHeightOffset = 9.5f;
+            cameraController.newTrailDistance = 15.0f;
+            cameraController.newHeightOffset = 7.5f;
             cameraController.newCameraDelay = 1.0f;
-            cameraController.newHorizontalOffset = 5.5f;
+            cameraController.newHorizontalOffset = 4.0f;
+            playerController.newlastPositionY = 2.0f;
         }
         else if (CubesList.Count < 15)
         {
-            cameraController.newTrailDistance = 22.0f;
-            cameraController.newHeightOffset = 11f;
+            cameraController.newTrailDistance = 17.0f;
+            cameraController.newHeightOffset = 8f;
             cameraController.newCameraDelay = 1.0f;
-            cameraController.newHorizontalOffset = 5.0f;
+            cameraController.newHorizontalOffset = 4.0f;
+            playerController.newlastPositionY = 5.0f;
         }
         else if (CubesList.Count >= 15)
         {
-            cameraController.newTrailDistance = 25.0f;
-            cameraController.newHeightOffset = 12f;
+            cameraController.newTrailDistance = 20.0f;
+            cameraController.newHeightOffset = 10f;
             cameraController.newCameraDelay = 1.0f;
             cameraController.newHorizontalOffset = 4.5f;
+            playerController.newlastPositionY = 9.0f;
         }
     } 
 
@@ -154,5 +157,6 @@ public class PlayerTrigger : MonoBehaviour
                 CubesList.RemoveAt(i);
             }
         }
+        CameraFixed();
     }
 }   

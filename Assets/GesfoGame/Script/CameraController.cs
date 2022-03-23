@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class CameraController : MonoBehaviour
 {
@@ -30,33 +31,6 @@ public class CameraController : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (trailDistance < newTrailDistance)
-        {
-            trailDistance += Time.deltaTime;
-        }
-        else if (trailDistance > newTrailDistance)
-        {
-            trailDistance -= Time.deltaTime;
-        }
-
-        if (heightOffset < newHeightOffset)
-        {
-            heightOffset += Time.deltaTime;
-        }
-        else if (trailDistance > newHeightOffset)
-        {
-            heightOffset -= Time.deltaTime;
-        }
-
-        if (horizontalOffset < newHorizontalOffset)
-        {
-            horizontalOffset += Time.deltaTime;
-        }
-        else if (trailDistance > newHorizontalOffset)
-        {
-            horizontalOffset -= Time.deltaTime;
-        }
-
         followPosition = target.position - target.forward * trailDistance;
 
         if (turnBool)
@@ -65,9 +39,13 @@ public class CameraController : MonoBehaviour
             followPosition.x += horizontalOffset;
 
         followPosition.y += heightOffset;
-        transform.position += (followPosition - transform.position) * cameraDelay;
 
-        transform.LookAt(target.transform);
+        Camera.main.transform.DOMove(followPosition, 1);
+        Camera.main.transform.DOLookAt(target.position, 0.1f);
+
+        DOTween.To(x => trailDistance = x, trailDistance, newTrailDistance, 0.5f);
+        DOTween.To(x => heightOffset = x, heightOffset, newHeightOffset, 0.5f);
+        DOTween.To(x => horizontalOffset = x, horizontalOffset, newHorizontalOffset, 0.5f);
     }
 
     public void SlideCamera(bool left)
@@ -75,7 +53,5 @@ public class CameraController : MonoBehaviour
         turnBool = left;
 
         playerController.turn = false;
-
-        FindObjectOfType<PlayerTrigger>().GetComponent< PlayerTrigger>().CameraFixed();
     }
 }
