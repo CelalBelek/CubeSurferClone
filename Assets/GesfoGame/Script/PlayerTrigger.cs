@@ -14,8 +14,12 @@ public class PlayerTrigger : MonoBehaviour
     public GameObject Player;
     public GameObject AstronotObject;
     public GameObject CubesObject;
+    public GameObject BombPrefabs;
+    public GameObject Particle;
 
     public Animator AstronotAnimator;
+
+    public float forcePower;
 
     private void Start()
     {
@@ -25,11 +29,21 @@ public class PlayerTrigger : MonoBehaviour
 
         CameraFixed();
     }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Bomb();
+        }
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Cube")
         {
             other.tag = "Player";
+            AstronotAnimator.SetBool("Jump", true);
 
             other.transform.parent = CubesObject.transform;
 
@@ -40,6 +54,7 @@ public class PlayerTrigger : MonoBehaviour
         }
         else if(other.tag == "CubePlus")
         {
+            AstronotAnimator.SetBool("Jump", true);
             for (int i = 0; i <= other.transform.childCount; i++)
             {
                 other.transform.GetChild(0).tag = "Player";
@@ -54,6 +69,7 @@ public class PlayerTrigger : MonoBehaviour
                     Destroy(other.gameObject);
                 }
             }
+
             CubesLister();
         }
         else if (other.tag == "GroundTurn")
@@ -82,18 +98,31 @@ public class PlayerTrigger : MonoBehaviour
             emeraldManager.emeraldCount++;
             Destroy(other.gameObject);
         }
+        else if (other.tag == "Jump")
+        {
+            Destroy(other);
+            JumpEffect();
+        }
     }
 
     public void CubesLister()
     {
         CameraFixed();
+        /*
+        if (!Particle.activeSelf)
+        {
+            Particle.SetActive(true);
+        }
+        else if (Particle.activeSelf)
+        {
+            Particle.SetActive(false);
+        }*/
 
         if (CubesList.Count > 0)
         {
             for (int i = 0; i < CubesList.Count; i++)
             {
                 CubesList[i].transform.position = new Vector3(CubesObject.transform.position.x, CubesList.Count - i, CubesObject.transform.position.z);
-                AstronotAnimator.SetBool("Jump", true);
                 StartCoroutine(AnimationEnd());
             }
         }
@@ -158,5 +187,38 @@ public class PlayerTrigger : MonoBehaviour
             }
         }
         CameraFixed();
+    }
+
+    public void JumpEffect()
+    {
+        CameraFixed();
+
+        if (CubesList.Count > 0)
+        {
+            for (int i = 0; i < CubesList.Count; i++)
+            {
+                CubesList[i].GetComponent<Rigidbody>().AddForce(new Vector3(CubesList[i].transform.position.y, forcePower));
+            }
+        }
+
+        transform.GetComponent<BoxCollider>().enabled = false;
+        StartCoroutine(JumpEnd());
+    }
+
+    IEnumerator JumpEnd()
+    {
+        yield return new WaitForSeconds(1.5f);
+        transform.GetComponent<BoxCollider>().enabled = true;
+    }
+
+    public void Bomb()
+    {
+        GameObject bomb = Instantiate(BombPrefabs, AstronotObject.transform.position, Quaternion.identity);
+        
+        if (playerController.turn)
+            bomb.GetComponent<Rigidbody>().AddForce(bomb.transform.forward * 3000);
+        else
+            bomb.GetComponent<Rigidbody>().AddForce(bomb.transform.right * 3000);
+       
     }
 }   

@@ -11,6 +11,9 @@ TagManager:
   - Platform
   - Fast
   - Emerald
+  - Jump
+  - FxTemporaire
+  - Bomb
   layers:
   - Default
   - TransparentFX
