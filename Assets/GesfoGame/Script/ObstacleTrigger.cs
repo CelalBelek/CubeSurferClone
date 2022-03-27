@@ -8,19 +8,14 @@ public class ObstacleTrigger : MonoBehaviour
     {
         if (other.tag == "Player")
         {
-            FindObjectOfType<PlayerTrigger>().CubeExit(other.name);
+            FindObjectOfType<PlayerTrigger>().CubeExit(other.name, transform.tag);
             this.GetComponent<BoxCollider>().isTrigger = false;
             other.GetComponent<Rigidbody>().useGravity = false;
             other.GetComponent<Rigidbody>().isKinematic = true;
             other.transform.parent = this.transform;
-
+            /*
             if (FindObjectOfType<PlayerController>().turn)
-                other.transform.localPosition = new Vector3(-3, 0, 0);
-        }
-        else if (other.tag == "Bomb")
-        {
-            Destroy(other.gameObject);
-            Destroy(gameObject);
+                other.transform.localPosition = new Vector3(-3, 0, 0);*/
         }
     }
 }

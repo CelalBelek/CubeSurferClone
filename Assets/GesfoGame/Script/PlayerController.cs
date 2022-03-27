@@ -9,6 +9,8 @@ public class PlayerController : MonoBehaviour
 
     public float speedX;
     public float speedZ;
+    
+    public float MobilespeedX;
 
     public bool turn;
 
@@ -17,6 +19,8 @@ public class PlayerController : MonoBehaviour
     public float lastPositionZ;
 
     public float newlastPositionY;
+
+    Touch touch;
 
     private void Start()
     {
@@ -27,10 +31,31 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        float horizontalMove = Input.GetAxis("Horizontal") * speedX * Time.deltaTime;
-        this.transform.Translate(horizontalMove, 0, speedZ * Time.deltaTime);
+        if (FindObjectOfType<GameManager>().GameBool == false)
+            return;
 
-        DOTween.To(x => lastPositionY = x, lastPositionY, newlastPositionY, 0.5f);
+        // Mouse
+        float horizontalMove = Input.GetAxis("Horizontal") * speedX * Time.deltaTime;
+
+        // Touch
+        if (Input.touchCount > 0)
+        {
+            touch = Input.GetTouch(0);
+
+            if (touch.phase == TouchPhase.Moved)
+            {
+                if (Input.GetTouch(0).deltaPosition.x <= 0)
+                {
+                    horizontalMove = -1 * MobilespeedX * Time.deltaTime;
+                }
+                else
+                {
+                    horizontalMove = 1 * MobilespeedX * Time.deltaTime;
+                }
+            }
+        }
+
+        this.transform.Translate(horizontalMove, 0, speedZ * Time.deltaTime);
 
         if (turn)
             cubeStatic.transform.position = new Vector3(lastPositionX, lastPositionY, cubeStatic.transform.position.z);

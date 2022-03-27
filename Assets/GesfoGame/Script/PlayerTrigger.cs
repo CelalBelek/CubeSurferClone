@@ -15,7 +15,8 @@ public class PlayerTrigger : MonoBehaviour
     public GameObject AstronotObject;
     public GameObject CubesObject;
     public GameObject BombPrefabs;
-    public GameObject Particle;
+    public GameObject ParticlePrefabs;
+    public GameObject ParticlePosition;
 
     public Animator AstronotAnimator;
 
@@ -50,6 +51,7 @@ public class PlayerTrigger : MonoBehaviour
             CubesList.Add(other.gameObject);
             other.name = "Karpuz - " + CubesList.Count;
 
+            KarpuzParticle();
             CubesLister();
         }
         else if(other.tag == "CubePlus")
@@ -70,6 +72,7 @@ public class PlayerTrigger : MonoBehaviour
                 }
             }
 
+            KarpuzParticle();
             CubesLister();
         }
         else if (other.tag == "GroundTurn")
@@ -108,15 +111,6 @@ public class PlayerTrigger : MonoBehaviour
     public void CubesLister()
     {
         CameraFixed();
-        /*
-        if (!Particle.activeSelf)
-        {
-            Particle.SetActive(true);
-        }
-        else if (Particle.activeSelf)
-        {
-            Particle.SetActive(false);
-        }*/
 
         if (CubesList.Count > 0)
         {
@@ -141,7 +135,7 @@ public class PlayerTrigger : MonoBehaviour
         else if (CubesList.Count < 10)
         {
             cameraController.newTrailDistance = 15.0f;
-            cameraController.newHeightOffset = 7.5f;
+            cameraController.newHeightOffset = 8.5f;
             cameraController.newCameraDelay = 1.0f;
             cameraController.newHorizontalOffset = 4.0f;
             playerController.newlastPositionY = 2.0f;
@@ -149,7 +143,7 @@ public class PlayerTrigger : MonoBehaviour
         else if (CubesList.Count < 15)
         {
             cameraController.newTrailDistance = 17.0f;
-            cameraController.newHeightOffset = 8f;
+            cameraController.newHeightOffset = 10f;
             cameraController.newCameraDelay = 1.0f;
             cameraController.newHorizontalOffset = 4.0f;
             playerController.newlastPositionY = 5.0f;
@@ -157,7 +151,7 @@ public class PlayerTrigger : MonoBehaviour
         else if (CubesList.Count >= 15)
         {
             cameraController.newTrailDistance = 20.0f;
-            cameraController.newHeightOffset = 10f;
+            cameraController.newHeightOffset = 12f;
             cameraController.newCameraDelay = 1.0f;
             cameraController.newHorizontalOffset = 4.5f;
             playerController.newlastPositionY = 9.0f;
@@ -177,7 +171,7 @@ public class PlayerTrigger : MonoBehaviour
         playerController.speedZ -= 2;
     }
 
-    public void CubeExit(string name)
+    public void CubeExit(string name, string tag)
     {
         for (int i = 0; i < CubesList.Count; i++)
         {
@@ -186,6 +180,15 @@ public class PlayerTrigger : MonoBehaviour
                 CubesList.RemoveAt(i);
             }
         }
+
+        if (CubesList.Count <= 0)
+        {
+            if (tag == "Win")
+                FindObjectOfType<GameManager>().GameWin();
+            else
+                FindObjectOfType<GameManager>().GameOver();
+        }
+
         CameraFixed();
     }
 
@@ -220,5 +223,11 @@ public class PlayerTrigger : MonoBehaviour
         else
             bomb.GetComponent<Rigidbody>().AddForce(bomb.transform.right * 3000);
        
+    }
+
+    public void KarpuzParticle()
+    {
+        GameObject particleEffect = Instantiate(ParticlePrefabs, ParticlePosition.transform.position, Quaternion.identity, ParticlePosition.transform);
+        Destroy(particleEffect, 3);
     }
 }   

@@ -14,6 +14,7 @@ TagManager:
   - Jump
   - FxTemporaire
   - Bomb
+  - Win
   layers:
   - Default
   - TransparentFX

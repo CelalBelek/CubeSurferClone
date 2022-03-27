@@ -8,7 +8,7 @@ public class LavaController : MonoBehaviour
     {
         if (other.tag == "Player")
         {
-            FindObjectOfType<PlayerTrigger>().CubeExit(other.name);
+            FindObjectOfType<PlayerTrigger>().CubeExit(other.name, transform.tag);
             other.transform.parent = null;
             Destroy(other.gameObject);
         }
