@@ -106,6 +106,17 @@ public class PlayerTrigger : MonoBehaviour
             Destroy(other);
             JumpEffect();
         }
+        else if (other.tag == "Finish")
+        {
+            int i = 0;
+
+            if (!FindObjectOfType<GameManager>().GameEndBool&& i == 0)
+            {
+                FindObjectOfType<GameManager>().GameWin();
+                FindObjectOfType<GameManager>().GameEndBool = true;
+                i++;
+            }
+        }
     }
 
     public void CubesLister()
@@ -184,9 +195,13 @@ public class PlayerTrigger : MonoBehaviour
         if (CubesList.Count <= 0)
         {
             if (tag == "Win")
+            {
                 FindObjectOfType<GameManager>().GameWin();
+            }
             else
+            {
                 FindObjectOfType<GameManager>().GameOver();
+            }
         }
 
         CameraFixed();

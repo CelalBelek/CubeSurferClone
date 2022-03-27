@@ -44,13 +44,13 @@ public class PlayerController : MonoBehaviour
 
             if (touch.phase == TouchPhase.Moved)
             {
-                if (Input.GetTouch(0).deltaPosition.x <= 0)
-                {
-                    horizontalMove = -1 * MobilespeedX * Time.deltaTime;
-                }
-                else
+                if (Input.GetTouch(0).deltaPosition.x > 3)
                 {
                     horizontalMove = 1 * MobilespeedX * Time.deltaTime;
+                }
+                else if (Input.GetTouch(0).deltaPosition.x < -3)
+                {
+                    horizontalMove = -1 * MobilespeedX * Time.deltaTime;
                 }
             }
         }

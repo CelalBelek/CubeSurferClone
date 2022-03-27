@@ -13,11 +13,18 @@ public class GameWin : MonoBehaviour
     {
         if (other.tag == "Player")
         {
-            FindObjectOfType<PlayerTrigger>().CubeExit(other.name, transform.tag);
-            this.GetComponent<BoxCollider>().isTrigger = false;
-            other.GetComponent<Rigidbody>().useGravity = false;
-            other.GetComponent<Rigidbody>().isKinematic = true;
-            other.transform.parent = this.transform;
+            if (FindObjectOfType<GameManager>().GameEndBool)
+            {
+                FindObjectOfType<GameManager>().GameWin();
+            }
+            else
+            {
+                FindObjectOfType<PlayerTrigger>().CubeExit(other.name, transform.tag);
+                this.GetComponent<BoxCollider>().isTrigger = false;
+                other.GetComponent<Rigidbody>().useGravity = false;
+                other.GetComponent<Rigidbody>().isKinematic = true;
+                other.transform.parent = this.transform;
+            }
         }
     }
 }
